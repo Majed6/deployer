@@ -2,12 +2,20 @@ import * as React from 'react';
 import Box from "@mui/material/Box";
 import {Tab, Tabs} from "@mui/material";
 import ChangeLogTab from "./ChangeLogTab";
+import {useEffect} from "react";
 
 function ChangeLog(props){
     const [value, setValue] = React.useState(0);
     const handleChange = (event, newValue) => {
         setValue(newValue);
-    };
+    }
+
+    useEffect(() => {
+        if (value === 1) {
+            props.onDiffTabDisplayed();
+        }
+    }, [props, value]);
+
     return (
         <Box sx={{width: '100%'}}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

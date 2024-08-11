@@ -14,6 +14,7 @@ import SettingsForm from "./Components/SettingsForm";
 import TagsTable from "./Components/TagsTable";
 import ProjectsList from "./Components/ProjectsList";
 import DeploymentModal from "./Components/DeploymentModal";
+import './App.css';
 
 export default function App() {
     // retrieve Token, GitlabHost, SearchGitlab, SearchNamespaces from localStorage
@@ -114,7 +115,7 @@ export default function App() {
             token: state.Token,
             host: state.GitlabHost
         });
-        return await api.Repositories.compare(projectId, from, to);
+        return await api.Repositories.compare(projectId, from, to, {unidiff: true});
     }
 
     function updateToken(e) {

@@ -4,9 +4,23 @@ import { Box, Button, Link, Modal, Typography } from '@mui/material';
 import DeploymentProgress from './DeploymentProgress';
 import ChangeLog from './ChangeLog';
 import CommitsTable from './CommitsTable';
-import DiffFile from './DiffFile';
+import {Diff2HtmlUI } from 'diff2html/lib/ui/js/diff2html-ui-slim';
+import 'diff2html/bundles/css/diff2html.min.css';
 
 const DeploymentModal = ({ state, setState, deploySelectedTag }) => {
+    function onDiffTabDisplayed() {
+        const diffTarget = document.getElementById('diff-ui');
+        const diff = state?.CommitsDiff?.commits?.diffs?.reduce((acc, diff) => acc + diff.diff, '') || ''
+        const diffConfig = {}
+        const diff2htmlUi = new Diff2HtmlUI(
+            diffTarget,
+            diff,
+            diffConfig
+        );
+        diff2htmlUi.draw();
+        diff2htmlUi.highlightCode();
+    }
+
     return (
         <Modal
             open={state.DeploymentModal}
@@ -21,7 +35,6 @@ const DeploymentModal = ({ state, setState, deploySelectedTag }) => {
                 transform: 'translate(-50%, -50%)',
                 width: 400,
                 bgcolor: 'background.paper',
-                border: '2px solid #000',
                 boxShadow: 24,
                 p: 2,
             }}>
@@ -59,16 +72,12 @@ const DeploymentModal = ({ state, setState, deploySelectedTag }) => {
                         transform: 'translate(-50%, -50%)',
                         width: 800,
                         bgcolor: 'background.paper',
-                        border: '2px solid #000',
                         boxShadow: 24,
-                        p: 4,
                     }}>
-                        <ChangeLog commitsTab={
+                        <ChangeLog onDiffTabDisplayed={onDiffTabDisplayed} commitsTab={
                             <CommitsTable commits={state.CommitsDiff.commits.commits} />
                         } diffTab={
-                            state?.CommitsDiff?.commits?.diffs?.map((diff) => (
-                                <DiffFile diff={diff} />
-                            ))
+                            <div id="diff-ui"/>
                         } />
                     </Box>
                 </Modal>
